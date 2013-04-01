@@ -9,12 +9,12 @@ javascript hash routing library for requirejs
 Set up listeners using `on()`:
 ```javascript
 define(["navigator"], function(navigator) {
-        navigator
-            .on("person/:id", function(id){ ... }) // eg.: `http://yourSite/#person/5`
-            .on("person/:id/news", function(id){ ... }) // eg.: `http://yourSite/#person/5/news`
-            .on("people/:tag/:page", function(tag, page){ ... }) // eg.: `http://yourSite/#person/5/3`
-            .on("/", function(){ ... }) // `http://yourSite/`
-            .on("login", myLoginFunction) // `http://yourSite/login`
+    navigator
+        .on("person/:id", function(id){ ... }) // eg.: `http://yourSite/#person/5`
+        .on("person/:id/news", function(id){ ... }) // eg.: `http://yourSite/#person/5/news`
+        .on("people/:tag/:page", function(tag, page){ ... }) // eg.: `http://yourSite/#person/5/3`
+        .on("/", function(){ ... }) // `http://yourSite/`
+        .on("login", myLoginFunction) // `http://yourSite/login`
     })
 ```
 
@@ -41,12 +41,10 @@ change the url hash using `go()`
   
   __A:__: Simply call `go()` after you've set up the listeners:
 ```javascript
-define(["navigator"], function(navigator) {
     navigator
         .on("person/:id", function(id){ ... }) 
         .on("person/:id/news", function(id){ ... })
         .go()
-})
 ```
 
  - __Q:__ I am reusing a function for multiple routes.
@@ -55,8 +53,6 @@ define(["navigator"], function(navigator) {
   
   __A:__ your method is called with the hash route param, even if it's static:
   ```javascript
-define(["navigator"], function(navigator) {
-    
     navigator
         .on("login", handleRoute) 
         .on("logout", handleRoute)
@@ -68,6 +64,14 @@ define(["navigator"], function(navigator) {
             case "logout": ...
         }
     }
-})
 ```
 
+ - __Q:__ How do I unregister all listeners?
+```javascript
+    navigator.off("*")
+```
+
+ - __Q:__ How do I create a catch-all handler that gets triggered on any URL change?
+```javascript
+    navigator.on("*", myHandler)
+```
