@@ -11,6 +11,7 @@ define([], function () {
     function on(event, callback){
         if (!registry[event]) {
             var hash = event
+                .replace("*","/*")
                 .replace(/:\w+/g, '([^\\/]+)')
                 .replace(/\//g, '\\/')
               , hashRegExp = new RegExp('^' + hash + '$')
@@ -26,13 +27,21 @@ define([], function () {
     }
 
     function off(event, callback){
-        if ( event == "*" ) { registry = {}; return this; }
+        if ( event == "*" && callback==null ) { 
+            registry = {}; 
+            return this; 
+        }
         if ( event in registry == false  ) { return this; }
         
         var eventObj = registry[event]
           , index = eventObj.listeners.indexOf(callback)
-        if (!~index) {return this;}
-        eventObj.listeners.splice(index, 1);
+
+        if (!callback) {
+            eventObj.listeners = []
+        }
+        if (callback && ~index) {
+            eventObj.listeners.splice(index, 1);
+        }
         if (!eventObj.listeners.length) {
             delete eventObj;
         }
@@ -59,12 +68,12 @@ define([], function () {
               , match = hash.match(map.regexp)
               , numDynamicParams = map.name.split(":").length-1;
 
-            if (match) {
+            if (match || key=="*") {
                 var args = numDynamicParams
                            ? match
                                 .splice(1,numDynamicParams)
                                 .concat(match[0])
-                           : [match[0]]
+                           : [hash]
                 trigger(map, args)
             }
         }

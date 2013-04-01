@@ -138,6 +138,20 @@ define(["navigator"],
                     navigator.off("*")
                 })
 
+                it('off("foo/bar") with no handler param should unregister all listeners for foo/bar', function(){
+                    var callback1 = function(){
+                        throw new Error("this should not be triggered")
+                    }
+                    var callback2 = function(){
+                        throw new Error("this should not be triggered")
+                    }
+                    navigator.on(":foo", callback1)
+                    navigator.on(":foo", callback2)
+                    navigator.off(":foo")
+                    window.location.hash="hello"
+                    navigator.go()
+                    
+                })
                 it('should handle /', function(){
                     var fail = function(){
                         throw new Error("this should not be triggered")
@@ -156,7 +170,7 @@ define(["navigator"],
                     expect(pass.called).to.be.true
                 })
 
-                it('off("* ") should unregister all listeners', function(){
+                it('off("*") should unregister all listeners', function(){
                     var fail = function(){
                         throw new Error("this should not be triggered")
                     }
@@ -173,10 +187,21 @@ define(["navigator"],
                     navigator.go()
                     window.location.hash="foo/bar"
                     navigator.go()
-
-                    
                 })
 
+                it('on("*", handler) should be triggerd on any url change', function(){
+                    var pass = function(){
+                        pass.numCalled++;
+                    }
+                    pass.numCalled = 0;
+                    
+                    navigator.on("*", pass)
+                    navigator.go("foo")
+                    navigator.go("foo/bar")
+                    navigator.go("foo/bar/x")
+                    navigator.go("foo/bar/x")
+                    expect(pass.numCalled).to.be.equal(4)
+                })
             })
 
             describe('setting the URL', function(){
