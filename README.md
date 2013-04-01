@@ -17,14 +17,14 @@ define(["navigator"], function(navigator) {
 ```
 
 Unregister listeners using `off()`:
-```javasript
+```javascript
     navigator
         .off("login", myLoginFunction)
     })
 ```
 
 change the url hash using `go()`
-```javasript
+```javascript
     navigator
         .go("person/5") // will change the url to `http://yourSite/#person/5`
     })
