@@ -39,8 +39,7 @@ change the url hash using `go()`
 
   How do I trigger them on the current URL?
   
-  __A__: Simply call `go()` after you've set up the listeners:
-
+  __A:__: Simply call `go()` after you've set up the listeners:
 ```javascript
 define(["navigator"], function(navigator) {
     navigator
@@ -49,3 +48,26 @@ define(["navigator"], function(navigator) {
         .go()
 })
 ```
+
+ - __Q:__ I am reusing a function for multiple routes.
+
+  How do I know which route triggered my method?
+  
+  __A:__ your method is called with the hash route param, even if it's static:
+  ```javascript
+define(["navigator"], function(navigator) {
+    
+    navigator
+        .on("login", handleRoute) 
+        .on("logout", handleRoute)
+        .go()
+        
+    function handleRoute(route) {
+        switch (route) {
+            case "login": ...
+            case "logout": ...
+        }
+    }
+})
+```
+
