@@ -8,6 +8,12 @@ define([], function () {
       , stateChangeEvent = ["onhashchange", "popstate"][hasPopState]
       , registry = {}
 
+    var self = {
+        on: on,
+        off: off,
+        go: go
+    }
+
     function on(event, callback){
         if (!registry[event]) {
             var hash = event
@@ -24,14 +30,15 @@ define([], function () {
             //console.log("adding", registry[event])
         }
         registry[event].listeners.push(callback);
+        return self;
     }
 
     function off(event, callback){
         if ( event == "*" && callback==null ) { 
             registry = {}; 
-            return this; 
+            return self; 
         }
-        if ( event in registry == false  ) { return this; }
+        if ( event in registry == false  ) { return self; }
         
         var eventObj = registry[event]
           , index = eventObj.listeners.indexOf(callback)
@@ -45,6 +52,7 @@ define([], function () {
         if (!eventObj.listeners.length) {
             delete eventObj;
         }
+        return self;
     }
     
     function trigger(eventObj, args){
@@ -77,17 +85,12 @@ define([], function () {
                 trigger(map, args)
             }
         }
-
+        return self;
         
     }
 
     // set up listeners:
     window[listener](loadEvent, go)
     window[listener](stateChangeEvent, go)
-
-    return {
-        on: on,
-        off: off,
-        go: go
-    }
+    return self
 });
